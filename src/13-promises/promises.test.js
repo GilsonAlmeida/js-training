@@ -1,4 +1,4 @@
-import { promiseDef, simplePromise } from './promises';
+import { promiseDef, simplePromise, chamarApiRestPromisse } from './promises';
 
 test('promises def', () => {
 
@@ -21,14 +21,20 @@ test('promises def', () => {
  * Fazer junto
  */
 test('simple promise chaining', (done) => {
-    done();
+    simplePromise('Valor').then(v => console.log('Meu Valor',v)).then(() => done());
 });
 
 /**
  * Fazer junto
  */
 test('simple promise error catching chaining', (done) => {
-    done();
+    simplePromise()
+    .then(v => console.log('Meu Valor',v))
+    .then(() => done())
+    .catch(error => {
+        console.log('Erro',error);
+        done();
+    });
 });
 
 /**
@@ -37,6 +43,19 @@ test('simple promise error catching chaining', (done) => {
  * Refatorar o exercício dos callbacks (#2) para utilizar Promises conforme exemplo mostrado anteriormente
  */
 test('refactoring callback exercise', () => {
+    const funcaoSucesso = resultado => {
+        console.log('sucesso');
+    };
+    const funcaoErro = resultado => {
+        console.log('erro');
+    };
+
+    chamarApiRestPromisse('/api/treinamento/', funcaoSucesso, funcaoErro)
+        .then(v => console.log('resultado:' , v))
+        .catch(error => {
+            console.log('Erro :'.error);
+            done();
+        })
 
 });
 
@@ -46,5 +65,25 @@ test('refactoring callback exercise', () => {
  * Refatorar o exercício do encadeamento dos callbacks para utilizar o encadeamento das promises.
  */
 test('refactoring callback chaining promises', () => {
+    const funcaoSucesso = resultado => {
+        return resultado;
+    };
 
+    const funcaoFalha = erro => {
+        return erro;
+    };
+
+    chamarApiRestPromisse('/api/treinamento/dfhgdjh', funcaoSucesso, funcaoFalha)
+        .then( resultado => {
+            console.log('primeiro sucesso exercicio 4', resultado);
+        }).catch(erro => {
+            console.log('Catch exercicio 4',erro);
+            chamarApiRestPromisse('/api/treinamento/', funcaoSucesso, funcaoFalha).then(
+                resultado => {
+                    expect(resultado).toEqual('Status 200');
+                    console.log('Resultado',resultado);
+                }
+            );            
+            done();
+        });
 });

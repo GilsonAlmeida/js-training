@@ -27,3 +27,15 @@ export const simplePromise = (value) => new Promise((resolve, reject) => {
         reject('Invalid value');
     }
 });
+
+
+export const chamarApiRestPromisse=(url,sucesso,erro) => new Promise ((resolve, reject) =>  {
+    const endpoint = '/api/treinamento/';
+   
+       if (url === endpoint) {
+           resolve(sucesso("Status 200"));   
+       } else {         
+           reject(erro(" Erro Desconhecido!!! "));
+       }
+   
+   });
